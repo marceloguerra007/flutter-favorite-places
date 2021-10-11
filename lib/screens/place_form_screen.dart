@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:favorite_places/providers/places_provider.dart';
 import 'package:favorite_places/widgets/image_input.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:provider/provider.dart';
 
 class PlaceFormScreen extends StatefulWidget {
   @override
@@ -17,7 +20,17 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
   }
 
   void _submitForm(){
+    if (_titleController.text.isEmpty || _pickedImage == null){
+      return;
+    }
 
+    Provider.of<PlacesProvider>(
+      context, 
+      listen: false
+    )
+    .addPlace(_titleController.text, _pickedImage!);
+    
+    Navigator.of(context).pop();
   }
 
   @override

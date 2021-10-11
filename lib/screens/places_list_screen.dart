@@ -1,4 +1,6 @@
+import 'package:favorite_places/providers/places_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../utils/app_routes.dart';
 
 class PlacesListScreen extends StatelessWidget {
@@ -17,7 +19,20 @@ class PlacesListScreen extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: CircularProgressIndicator(),
+        child: Consumer<PlacesProvider>(          
+          builder: (ctx, placeProvider, childConsumer) => placeProvider.itemsCount == 0 ? Text('Nenhum local cadastrado')
+            : ListView.builder(
+                itemCount: placeProvider.itemsCount,
+                itemBuilder: (ctx, i) => ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: FileImage(placeProvider.itemByIndex(i).image
+                    )
+                  ),
+                  title: Text(placeProvider.itemByIndex(i).title),
+                  onTap: (){},
+                )
+              )
+        ),
       ),
     );
   }
