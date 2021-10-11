@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:favorite_places/providers/places_provider.dart';
 import 'package:favorite_places/widgets/image_input.dart';
+import 'package:favorite_places/widgets/location_input.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
@@ -56,6 +57,8 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
                     ),
                     SizedBox(height: 10),
                     ImageInput(onSelectImage: this._selectImage),
+                    SizedBox(height: 10),
+                    LocationInput()
                   ],
                 ),
               ),
