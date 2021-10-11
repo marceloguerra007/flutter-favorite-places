@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:favorite_places/utils/db_util.dart';
 import 'package:flutter/material.dart';
 import 'package:favorite_places/models/place.dart';
 
@@ -29,6 +30,16 @@ class PlacesProvider with ChangeNotifier{
     );
 
     _items.add(newPlace);
+    
+    DbUtil.insert(
+      'PLACES', 
+      {
+        'id': newPlace.id,
+        'title': newPlace.title,
+        'image': newPlace.image.path
+      }
+    );
+    
     notifyListeners();
   }
 }
