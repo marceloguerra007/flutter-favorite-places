@@ -1,4 +1,6 @@
+import 'package:favorite_places/utils/location_util.dart';
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
 
 class LocationInput extends StatefulWidget {
   const LocationInput({ Key? key }) : super(key: key);
@@ -8,9 +10,24 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInputState extends State<LocationInput> {
+  String _previewImageUrl = '';
+
+  Future<void> _getCurrentUserLocation() async {
+    final locData = await Location().getLocation();
+
+    final staticMapImageUrl = LocationUtil.generateLocationPreviewImage(
+      latitude: locData.longitude!, 
+      longitude: locData.longitude!
+    );
+
+    setState(() {
+      _previewImageUrl = staticMapImageUrl;
+    });
+
+  }
+  
   @override
-  Widget build(BuildContext context) {
-    String _previewImageUrl = '';
+  Widget build(BuildContext context) {    
     
     return Column(
       children: [
@@ -44,7 +61,7 @@ class _LocationInputState extends State<LocationInput> {
             ElevatedButton.icon(              
               icon: Icon(Icons.map), 
               label: Text('Selecione no Mapa'),              
-              onPressed: (){}, 
+              onPressed: _getCurrentUserLocation, 
             ),
           ],
         )
