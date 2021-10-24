@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
 
+import 'screens/place_detail_screen.dart';
 import 'screens/place_form_screen.dart';
 import 'screens/places_list_screen.dart';
 import 'utils/app_routes.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
           home: PlacesListScreen(),
           routes: {
             AppRoutes.PLACE_FORM: (ctx) => PlaceFormScreen(),
+            AppRoutes.PLACE_DETAIL: (ctx) => PlaceDetailScreen(),
           },
           debugShowCheckedModeBanner: false,
         ),
