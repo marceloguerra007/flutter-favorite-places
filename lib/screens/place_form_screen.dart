@@ -4,6 +4,7 @@ import 'package:favorite_places/providers/places_provider.dart';
 import 'package:favorite_places/widgets/image_input.dart';
 import 'package:favorite_places/widgets/location_input.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
 
@@ -15,21 +16,34 @@ class PlaceFormScreen extends StatefulWidget {
 class _PlaceFormScreenState extends State<PlaceFormScreen> {
   final _titleController = TextEditingController();
   File? _pickedImage;
+  LatLng? _pickedPosition;
 
   void _selectImage(File pickedImage){
-    _pickedImage = pickedImage;
+    setState(() {
+      _pickedImage = pickedImage;      
+    });
+    
+  }
+
+  void _selectPosition(LatLng position){
+    setState(() {
+      _pickedPosition = position;      
+    });
+  }
+
+  bool isValidForm(){
+    return _titleController.text.isNotEmpty && _pickedImage != null || _pickedPosition != null;
   }
 
   void _submitForm(){
-    if (_titleController.text.isEmpty || _pickedImage == null){
+    if (!isValidForm())
       return;
-    }
 
     Provider.of<PlacesProvider>(
       context, 
       listen: false
     )
-    .addPlace(_titleController.text, _pickedImage!);
+    .addPlace(_titleController.text, _pickedImage!, _pickedPosition!);
     
     Navigator.of(context).pop();
   }
@@ -58,7 +72,7 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
                     SizedBox(height: 10),
                     ImageInput(onSelectImage: this._selectImage),
                     SizedBox(height: 10),
-                    LocationInput()
+                    LocationInput(onSelectPosition: this._selectPosition)
                   ],
                 ),
               ),
@@ -68,7 +82,7 @@ class _PlaceFormScreenState extends State<PlaceFormScreen> {
             icon: Icon(Icons.add), 
             label: Text('Adicionar'),            
             //(backgroundColor: Theme.of(context).accentColor),
-            onPressed: _submitForm
+            onPressed: isValidForm() ? _submitForm : null
           ),
         ],
       ),

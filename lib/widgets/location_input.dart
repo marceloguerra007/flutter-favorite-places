@@ -5,7 +5,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
 class LocationInput extends StatefulWidget {
-  const LocationInput({ Key? key }) : super(key: key);
+  final Function onSelectPosition;
+
+  const LocationInput({required this.onSelectPosition});
 
   @override
   _LocationInputState createState() => _LocationInputState();
@@ -14,18 +16,28 @@ class LocationInput extends StatefulWidget {
 class _LocationInputState extends State<LocationInput> {
   String _previewImageUrl = '';
 
-  Future<void> _getCurrentUserLocation() async {
-    final locData = await Location().getLocation();
-
+  void _showPreview(double latitude, double longitude){
     final staticMapImageUrl = LocationUtil.generateLocationPreviewImage(
-      latitude: locData.longitude!, 
-      longitude: locData.longitude!
+      latitude: latitude, 
+      longitude: longitude
     );
 
     setState(() {
       _previewImageUrl = staticMapImageUrl;
     });
+  }
 
+  Future<void> _getCurrentUserLocation() async {
+    try {
+      final locData = await Location().getLocation();
+
+      _showPreview(locData.latitude!, locData.longitude!);
+      
+      if (locData != null)
+        widget.onSelectPosition(locData);      
+    } catch (e) {
+      return;
+    }
   }
 
   Future<void> _selectOnMap() async{
@@ -36,7 +48,11 @@ class _LocationInputState extends State<LocationInput> {
       )
     );
 
-    
+    _showPreview(selectedPosition.latitude, selectedPosition.longitude);
+
+    // ignore: unnecessary_null_comparison
+    if (selectedPosition != null)
+      widget.onSelectPosition(selectedPosition);
   }
   
   @override
